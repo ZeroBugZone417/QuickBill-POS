@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickBill POS - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-bolt" id="mainLogoIcon"></i>
+                <img id="mainLogoImg" src="" style="display: none; width: 32px; height: 32px; border-radius: 6px; object-fit: cover; margin-right: 10px;">
+                <span id="mainShopName">QuickBill POS</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active" id="nav-dashboard">
+                        <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#products" class="nav-link" id="nav-products">
+                        <i class="fas fa-boxes-stacked"></i> <span>Products</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#billing" class="nav-link" id="nav-billing">
+                        <i class="fas fa-receipt"></i> <span>Billing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#online-orders" class="nav-link" id="nav-online-orders">
+                        <i class="fas fa-globe"></i> <span>Online Orders</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link" id="nav-reports">
+                        <i class="fas fa-file-invoice-dollar"></i> <span>Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link" id="nav-settings">
+                        <i class="fas fa-cogs"></i> <span>POS Settings</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-links" style="margin-top: auto;">
+                <li class="nav-item" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                    <a href="/shop.html" target="_blank" class="nav-link" style="color: var(--accent);">
+                        <i class="fas fa-external-link-alt"></i> <span>Visit Shop</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-right-from-bracket"></i> <span>Logout</span>
+                    </a>
+                </li>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="view-container">
+            <!-- Content will be injected here via app.js -->
+        </main>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Hidden Premium Invoice Template -->
+    <!-- Hidden Premium Invoice Template -->
+    <div id="invoice-template" style="position: absolute; left: -9999px; width: 550px; padding: 40px; background: white; color: #1e293b; font-family: 'Inter', sans-serif;">
+        <!-- Header Info -->
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 40px;">
+            <div id="inv-header-left" style="max-width: 300px;">
+                <img id="inv-logo" src="" style="max-height: 60px; margin-bottom: 15px; display: none;">
+                <h1 id="inv-shop-name" style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 0; line-height: 1.1;">Shop Name</h1>
+                <p id="inv-shop-address" style="font-size: 13px; color: #64748b; margin: 8px 0 0 0; line-height: 1.4; display: none;">Shop Address</p>
+                <p id="inv-shop-contact" style="font-size: 13px; color: #64748b; margin: 4px 0 0 0; display: none;">Phone: 0000000000</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="display: inline-block; background: #f1f5f9; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Invoice</div>
+                <h2 id="inv-number" style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0;">#QB-00000</h2>
+                <p id="inv-date" style="font-size: 13px; color: #94a3b8; margin: 5px 0 0 0;">Oct 24, 2023</p>
+            </div>
+        </div>
+
+        <!-- Bill To Section -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+            <div>
+                <h4 style="font-size: 11px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 8px;">Billed To</h4>
+                <p id="inv-cust-name" style="font-weight: 700; font-size: 15px; color: #334155; margin: 0;">Customer Name</p>
+                <p id="inv-cust-contact" style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">Customer Contact</p>
+            </div>
+            <div style="text-align: right;">
+                <h4 style="font-size: 11px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 8px;">Payment Status</h4>
+                <div style="display: inline-flex; align-items: center; gap: 6px; color: #059669; font-weight: 700; font-size: 14px;">
+                    <i class="fas fa-check-circle"></i> PAID
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #f1f5f9;">
+                    <th style="padding: 12px 0; text-align: left; font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">Items Description</th>
+                    <th style="padding: 12px 0; text-align: center; font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">Qty</th>
+                    <th style="padding: 12px 0; text-align: right; font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">Price</th>
+                    <th style="padding: 12px 0; text-align: right; font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="inv-items">
+                <!-- Items injected here -->
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div style="display: flex; justify-content: flex-end;">
+            <div style="width: 250px;">
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                    <span style="color: #64748b; font-size: 14px;">Subtotal</span>
+                    <span id="inv-subtotal" style="font-weight: 600; font-size: 14px; color: #334155;">Rs. 0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 15px 0 0 0;">
+                    <span style="font-weight: 800; font-size: 18px; color: #0f172a;">Grand Total</span>
+                    <span id="inv-total" style="font-weight: 800; font-size: 18px; color: #22c55e;">Rs. 0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Message -->
+        <div style="margin-top: 60px; text-align: center; border-top: 2px dashed #e2e8f0; padding-top: 30px;">
+            <p id="inv-footer-msg" style="font-size: 15px; font-weight: 700; color: #334155; margin: 0;">Thank you for your business!</p>
+            <p style="font-size: 11px; color: #94a3b8; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em;">Generated by QuickBill POS System</p>
+        </div>
+    </div>
+
+    <!-- Share Bar Modal -->
+    <div id="shareModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 99999; align-items: center; justify-content: center;">
+        <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
+            <div style="font-size: 40px; color: var(--accent); margin-bottom: 20px;"><i class="fas fa-check-circle"></i></div>
+            <h2 style="margin-bottom: 10px;">Sale Successful!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Invoice generated successfully.</p>
+            
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text-muted);">Send to WhatsApp Number:</label>
+                <div style="display: flex; align-items: center; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; height: 45px;">
+                    <span style="padding: 0 15px; height: 100%; display: flex; align-items: center; background: #f8fafc; border-right: 1px solid var(--border);"><i class="fab fa-whatsapp" style="color: #25D366; font-size: 20px;"></i></span>
+                    <input type="text" id="modalWaNumber" placeholder="07XXXXXXXX" style="width: 100%; border: none; padding: 0 15px; height: 100%; font-size: 15px; outline: none; background: transparent; color: #0f172a;">
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button class="btn btn-primary" id="btnShareWA" style="justify-content: center; padding: 15px; background: #25D366; border-color: #25D366; color: white;">
+                    <i class="fab fa-whatsapp"></i> SEND INVOICE
+                </button>
+                <button class="btn btn-outline" id="btnDownloadJPG" style="justify-content: center; padding: 15px;">
+                    <i class="fas fa-download"></i> DOWNLOAD JPG
+                </button>
+                <button class="btn btn-outline" onclick="document.getElementById('shareModal').style.display='none'" style="justify-content: center; padding: 15px; border: none; color: var(--text-muted);">
+                    CLOSE
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Sale Details Modal -->
+    <div id="saleDetailsModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+        <div class="card" style="width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;">
+            <div id="sdm-body">
+                <p style="text-align:center; padding: 20px; color: var(--text-muted);">Loading...</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
